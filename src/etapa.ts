@@ -7,16 +7,30 @@ export default class Etapa {
     public status: StatusEtapa
     public funcionarios: Funcionario[]
 
-    constructor(nome: string, prazo: string, status: StatusEtapa, funcionarios: Funcionario[]){
+    constructor(nome: string, prazo: string, funcionarios: Funcionario[]){
         this.nome = nome
         this.prazo = prazo
-        this.status = status
+        this.status = StatusEtapa.PENDENTE
         this.funcionarios = funcionarios
     }
 
-    iniciar(){}
+    public iniciar(): void {
+        if (this.status === StatusEtapa.PENDENTE) {
+            this.status = StatusEtapa.ANDAMENTO;
+            console.log(`Etapa "${this.nome}" iniciada.`);
+        } else {
+            console.log(`Atenção: A etapa "${this.nome}" não pode ser iniciada pois seu status é ${this.status}.`);
+        }
+    }
 
-    finalizar(){}
+    public finalizar(): void {
+        if (this.status === StatusEtapa.ANDAMENTO) {
+            this.status = StatusEtapa.CONCLUIDA;
+            console.log(`Etapa "${this.nome}" concluída.`);
+        } else {
+            console.log(`Atenção: A etapa "${this.nome}" não pode ser finalizada pois seu status é ${this.status}.`);
+        }
+    }
 
     associarFuncionario(funcionarios: Funcionario){}
 
@@ -33,4 +47,10 @@ Endereço: ${funcionario.endereco}
         }
     return listaFuncionarios
         }
+    detalhes(): void {
+        console.log(`Nome da Etapa: ${this.nome}`);
+        console.log(`Prazo: ${this.prazo}`);
+        console.log(`Status: ${this.status}`);
+        console.log(`Funcionários Associados:\n${this.listarFuncionarios()}`);
+    }
 }

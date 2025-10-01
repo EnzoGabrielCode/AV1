@@ -11,11 +11,6 @@ const validarCodigoAeronaveFormato = (codigo: string): boolean => {
     return regex.test(codigo);
 };
 
-const validarNumeroInteiroPositivo = (input: string): boolean => {
-    const numero = parseInt(input, 10);
-    return !isNaN(numero) && numero > 0;
-};
-
 const validarSemNumero = (input: string): boolean => {
     const regex = /^[^0-9]+$/;
     return regex.test(input);
@@ -24,6 +19,8 @@ const validarSemNumero = (input: string): boolean => {
 export default class CadastrarPeca {
     
     public async cadastrar(): Promise<Peca> {
+
+        console.log('================= Cadastrar Peça ================\n');
         
         const nome = await perguntarComValidacao(
             'Digite o nome da peça: ',

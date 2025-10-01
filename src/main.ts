@@ -6,9 +6,13 @@ import CadastrarPeca from './cadastrarPeca';
 import Peca from './peca';
 import { StatusPeca } from './enums';
 import { perguntarComValidacao } from './input';
+import CadastrarEtapa from './cadastrarEtapa';
+import Etapa from './etapa';
+import { atualizarEtapa } from './atualizarEtapa';
 
 const pecasCadastradas: Peca[] = [];
 const aeronavesCadastradas: Aeronave[] = [];
+const etapasCadastradas: Etapa[] = [];
 
 let mensagem = new Mensagens();
 
@@ -29,8 +33,9 @@ class Sistema{
                     console.log('\nEscolha o tipo de cadastro:');
                     console.log('1 - Cadastrar Aeronave');
                     console.log('2 - Cadastrar Peça');
+                    console.log('3 - Cadastrar Etapa de Produção');
                     console.log('0 - Voltar\n');
-                    const tipoCadastro = await perguntar('\nDigite a opção desejada: ');
+                    const tipoCadastro = await perguntar('Digite a opção desejada: ');
 
                     switch (tipoCadastro) {
                         case '1':
@@ -46,6 +51,14 @@ class Sistema{
                             const cadastroPeca = new CadastrarPeca();
                             const novaPeca = await cadastroPeca.cadastrar();
                             pecasCadastradas.push(novaPeca);
+                            console.log('\nPressione Enter para continuar...');
+                            await perguntar('');
+                            break;
+                        case '3':
+                            console.clear();
+                            const cadastroEtapa = new CadastrarEtapa();
+                            const novaEtapa = await cadastroEtapa.cadastrar();
+                            etapasCadastradas.push(novaEtapa);
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
                             break;
@@ -67,6 +80,7 @@ class Sistema{
                     console.log('\nEscolha o que deseja listar:');
                     console.log('1 - Listar Aeronave');
                     console.log('2 - Listar Peça');
+                    console.log('3 - Listar Etapa de Produção');
                     console.log('0 - Voltar\n');
                     const tipoLista = await perguntar('\nDigite a opção desejada: ');
 
@@ -89,6 +103,17 @@ class Sistema{
                                 console.log('Nenhuma peça cadastrada.');
                             } else {
                                 pecasCadastradas.forEach(peca => peca.detalhes());
+                            }
+                            console.log('\nPressione Enter para continuar...');
+                            await perguntar('');
+                            break;
+                        case '3':
+                            console.clear();
+                            console.log('\n================ Etapas de Produção cadastradas ================\n');
+                            if (etapasCadastradas.length === 0) {
+                                console.log('Nenhuma etapa de produção cadastrada.');
+                            } else {
+                                etapasCadastradas.forEach(etapa => etapa.detalhes());
                             }
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
@@ -168,6 +193,12 @@ class Sistema{
                     await perguntar('');
                     break;
 
+                case '4':
+                    console.clear();
+                    await atualizarEtapa(etapasCadastradas);
+                    console.log('\nPressione Enter para continuar...');
+                    await perguntar('');
+                    break;
                 case '0':
                     console.clear();
                     console.log('\nEncerrando o sistema. Até mais!\n');
