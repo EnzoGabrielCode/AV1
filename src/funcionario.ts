@@ -1,7 +1,7 @@
 import { NivelPermissao } from "./enums";
 
 export default class Funcionario{
-    private id: string
+    public id: string
     public nome: string
     public telefone: string
     public endereco: string
@@ -25,6 +25,16 @@ export default class Funcionario{
 
     autenticar(usuario: string, senha: string): boolean {
         return this.usuario === usuario && this.senha === senha
+    }
+
+    detalhes(): void {
+        console.log(`ID: ${this.id}`);
+        console.log(`Nome: ${this.nome}`);
+        console.log(`Telefone: ${this.telefone}`);
+        console.log(`Endereço: ${this.endereco}`);
+        console.log(`Usuário: ${this.usuario}`);
+        console.log(`Nível de Permissão: ${this.nivelPermissao}`);
+        console.log('-----------------------------------------------------')
     }
 
     salvar(){}

@@ -9,10 +9,15 @@ import { perguntarComValidacao } from './input';
 import CadastrarEtapa from './cadastrarEtapa';
 import Etapa from './etapa';
 import { atualizarEtapa } from './atualizarEtapa';
+import CadastrarFuncionario from './cadastrarFuncionario';
+import Funcionario from './funcionario';
 
 const pecasCadastradas: Peca[] = [];
 const aeronavesCadastradas: Aeronave[] = [];
 const etapasCadastradas: Etapa[] = [];
+const funcionariosCadastrados: Funcionario[] = [];
+
+let proximoIdFuncionario = 1
 
 let mensagem = new Mensagens();
 
@@ -34,6 +39,7 @@ class Sistema{
                     console.log('1 - Cadastrar Aeronave');
                     console.log('2 - Cadastrar Peça');
                     console.log('3 - Cadastrar Etapa de Produção');
+                    console.log('4 - Cadastrar Funcionário');
                     console.log('0 - Voltar\n');
                     const tipoCadastro = await perguntar('Digite a opção desejada: ');
 
@@ -62,6 +68,15 @@ class Sistema{
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
                             break;
+                        case '4':
+                            console.clear();
+                            const cadastroFuncionario = new CadastrarFuncionario();
+                            const novoFuncionario = await cadastroFuncionario.cadastrar(proximoIdFuncionario);
+                            funcionariosCadastrados.push(novoFuncionario);
+                            proximoIdFuncionario++;
+                            console.log('\nPressione Enter para continuar...');
+                            await perguntar('');
+                            break;
                         case '0':
                             console.clear();
                             console.log('\nVoltando, Pressione Enter para continuar...');
@@ -81,6 +96,7 @@ class Sistema{
                     console.log('1 - Listar Aeronave');
                     console.log('2 - Listar Peça');
                     console.log('3 - Listar Etapa de Produção');
+                    console.log('4 - Listar Funcionários');
                     console.log('0 - Voltar\n');
                     const tipoLista = await perguntar('\nDigite a opção desejada: ');
 
@@ -114,6 +130,18 @@ class Sistema{
                                 console.log('Nenhuma etapa de produção cadastrada.');
                             } else {
                                 etapasCadastradas.forEach(etapa => etapa.detalhes());
+                            }
+                            console.log('\nPressione Enter para continuar...');
+                            await perguntar('');
+                            break;
+                        case '4':
+                            console.clear();
+                            console.log('\n================ Funcionários cadastrados ================');
+                            console.log('-----------------------------------------------------')
+                            if (funcionariosCadastrados.length === 0) {
+                                console.log('Nenhum funcionário cadastrado.');
+                            } else {
+                                funcionariosCadastrados.forEach(funcionario => funcionario.detalhes());
                             }
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
