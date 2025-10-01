@@ -4,6 +4,7 @@ export default class Mensagens {
         console.log(`Escolha uma opção:`);
         console.log(`1 - Cadastro`);
         console.log(`2 - Listar`);
+        console.log(`3 - Atualizar Status da Peça`);
         console.log(`0 - Sair do sistema\n`);
     }
 

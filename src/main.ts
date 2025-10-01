@@ -4,6 +4,8 @@ import CadastrarAeronave from './cadastrarAeronave';
 import Aeronave from './aeronave';
 import CadastrarPeca from './cadastrarPeca';
 import Peca from './peca';
+import { StatusPeca } from './enums';
+import { perguntarComValidacao } from './input';
 
 const pecasCadastradas: Peca[] = [];
 const aeronavesCadastradas: Aeronave[] = [];
@@ -103,6 +105,67 @@ class Sistema{
                             await perguntar('');
                             break;
                     }
+                    break;
+
+                case '3':
+                    console.clear();
+                    if (pecasCadastradas.length === 0) {
+                        console.log('Nenhuma peça cadastrada para atualizar.');
+                    } else {
+                        console.log('\n================ Atualizar Status da Peça ================\n');
+                        pecasCadastradas.forEach((peca, index) => {
+                            console.log(`${index + 1} - ${peca.nome} (Status Atual: ${peca.status})`);
+                        });
+                        console.log('0 - Voltar\n');
+
+                        const escolhaIndex = await perguntarComValidacao(
+                            'Selecione o número da peça para atualizar o status: ',
+                            (resposta) => {
+                                const num = parseInt(resposta);
+                                return !isNaN(num) && num >= 0 && num <= pecasCadastradas.length;
+                            },
+                            'Opção inválida.'
+                        );
+
+                        if (escolhaIndex === '0') {
+                            console.log('\nVoltando ao menu principal...');
+                        } else {
+                            const index = parseInt(escolhaIndex) - 1;
+                            const pecaSelecionada = pecasCadastradas[index];
+
+                            console.log('\nSelecione o novo status:');
+                            console.log('1 - Em Produção');
+                            console.log('2 - Em Transporte');
+                            console.log('3 - Pronta');
+
+                            const statusInput = await perguntarComValidacao(
+                                `Digite o novo status para a peça "${pecaSelecionada.nome}": `,
+                                (resposta) => ['1', '2', '3'].includes(resposta),
+                                'Opção de status inválida. Digite 1, 2 ou 3.'
+                            );
+
+                            let novoStatusEnum: StatusPeca;
+                            switch (statusInput) {
+                                case '1':
+                                    novoStatusEnum = StatusPeca.EM_PRODUCAO;
+                                    break;
+                                case '2':
+                                    novoStatusEnum = StatusPeca.EM_TRANSPORTE;
+                                    break;
+                                case '3':
+                                    novoStatusEnum = StatusPeca.PRONTA;
+                                    break;
+                                default:
+                                    throw new Error('Status inválido');
+                            }
+
+                            pecaSelecionada.status = novoStatusEnum;
+
+                            console.log('\nStatus atualizado com sucesso!');
+                        }
+                    }
+                    console.log('\nPressione Enter para continuar...');
+                    await perguntar('');
                     break;
 
                 case '0':
