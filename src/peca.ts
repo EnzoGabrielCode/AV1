@@ -17,6 +17,12 @@ export default class Peca {
         this.status = novoStatus
     }
 
+    detalhes(): void {
+        console.log(`---------Detalhes da Peça ${this.nome}:---------`)
+        console.log(`Nome: ${this.nome}\nTipo: ${this.tipo}\nFornecedor: ${this.fornecedor}\nStatus: ${this.status}`)
+        console.log('-------------------------------------------------')
+    }
+
     salvar() {}
 
     carregar() {}

@@ -15,7 +15,15 @@ export default class Aeronave {
         this.alcance = alcance
     }
 
-    detalhes(){}
+    detalhes():void{
+        console.log(`---------Detalhes da Aeronave ${this.codigo}:---------`)
+        console.log(`Código: ${this.codigo}\nModelo: ${this.modelo}\nTipo: ${this.tipo}\nCapacidade: ${this.capcidade}\nAlcance: ${this.alcance}`)
+        console.log('-------------------------------------------------')
+    }
+
+    get pegarCodigo(): string {
+        return this.codigo
+    }
 
     salvar(){}
 
