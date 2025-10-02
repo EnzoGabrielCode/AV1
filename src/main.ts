@@ -40,6 +40,7 @@ class Sistema{
                     console.log('2 - Cadastrar Peça');
                     console.log('3 - Cadastrar Etapa de Produção');
                     console.log('4 - Cadastrar Funcionário');
+                    console.log('5 - Cadastrar/Realizar Teste');
                     console.log('0 - Voltar\n');
                     const tipoCadastro = await perguntar('Digite a opção desejada: ');
 
@@ -63,7 +64,7 @@ class Sistema{
                         case '3':
                             console.clear();
                             const cadastroEtapa = new CadastrarEtapa();
-                            const novaEtapa = await cadastroEtapa.cadastrar();
+                            const novaEtapa = await cadastroEtapa.cadastrar(funcionariosCadastrados);
                             etapasCadastradas.push(novaEtapa);
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
@@ -77,6 +78,10 @@ class Sistema{
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
                             break;
+                        case '5':
+                            console.clear();
+                            
+
                         case '0':
                             console.clear();
                             console.log('\nVoltando, Pressione Enter para continuar...');
