@@ -11,11 +11,14 @@ import Etapa from './etapa';
 import { atualizarEtapa } from './atualizarEtapa';
 import CadastrarFuncionario from './cadastrarFuncionario';
 import Funcionario from './funcionario';
+import Teste from './teste';
+import CadastrarTeste from './cadastrarTeste';
 
 const pecasCadastradas: Peca[] = [];
 const aeronavesCadastradas: Aeronave[] = [];
 const etapasCadastradas: Etapa[] = [];
 const funcionariosCadastrados: Funcionario[] = [];
+const TestesCadastrados: Teste[] = []
 
 let proximoIdFuncionario = 1
 
@@ -80,8 +83,13 @@ class Sistema{
                             break;
                         case '5':
                             console.clear();
-                            
-
+                            const cadastrarTeste = new CadastrarTeste();
+                            const novoTeste = await cadastrarTeste.cadastrar();
+                            TestesCadastrados.push(novoTeste)
+                            proximoIdFuncionario++;
+                            console.log('\nPressione Enter para continuar...');
+                            await perguntar('');
+                            break;
                         case '0':
                             console.clear();
                             console.log('\nVoltando, Pressione Enter para continuar...');
@@ -98,10 +106,11 @@ class Sistema{
                 case '2':
                     console.clear();
                     console.log('\nEscolha o que deseja listar:');
-                    console.log('1 - Listar Aeronave');
-                    console.log('2 - Listar Peça');
+                    console.log('1 - Listar Aeronaves');
+                    console.log('2 - Listar Peças');
                     console.log('3 - Listar Etapa de Produção');
                     console.log('4 - Listar Funcionários');
+                    console.log('5 - Listar Testes');
                     console.log('0 - Voltar\n');
                     const tipoLista = await perguntar('\nDigite a opção desejada: ');
 
@@ -147,6 +156,18 @@ class Sistema{
                                 console.log('Nenhum funcionário cadastrado.');
                             } else {
                                 funcionariosCadastrados.forEach(funcionario => funcionario.detalhes());
+                            }
+                            console.log('\nPressione Enter para continuar...');
+                            await perguntar('');
+                            break;
+                        case '5':
+                            console.clear();
+                            console.log('\n================ Testes cadastrados ================');
+                            console.log('-----------------------------------------------------')
+                            if (TestesCadastrados.length === 0) {
+                                console.log('Nenhum teste cadastrado.');
+                            } else {
+                                TestesCadastrados.forEach(teste => teste.detalhes());
                             }
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
