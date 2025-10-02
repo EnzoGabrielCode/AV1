@@ -1,6 +1,8 @@
 import Aeronave from "./aeronave";
 import { TipoAeronave } from "./enums";
 import { perguntarComValidacao } from "./input";
+import Peca from "./peca";
+import Etapa from "./etapa";
 
 const validarNaoVazio = (input: string): boolean => input.length > 0;
 
@@ -16,7 +18,7 @@ const validarNumeroInteiroPositivo = (input: string): boolean => {
 
 export default class CadastrarAeronave {
     
-    public async cadastrar(aeronavesExistentes: Aeronave[]): Promise<Aeronave> {
+    public async cadastrar(aeronavesExistentes: Aeronave[], pecaDisponiveis: Peca[], etapaDisponiveis: Etapa[]): Promise<Aeronave> {
         
         console.log('================= Cadastrar Aeronave ================\n');
 
@@ -70,6 +72,83 @@ export default class CadastrarAeronave {
             parseInt(capacidadeStr), 
             parseInt(alcanceStr)
         );
+
+        console.log('\n--- Adicionar Peças ---');
+        
+        let adicionando = true;
+        while (adicionando) {
+
+            const pecaParaSelecionar = pecaDisponiveis.filter(
+                disponivel => !novaAeronave.peca.some(atribuido => atribuido.nome === disponivel.nome)
+            )
+            if (pecaDisponiveis.length === 0) {
+                console.log('Nenhuma peça disponível para adicionar.');
+                break;
+            }
+
+            console.log('\nSelecione uma peça para adicionar à etapa:');
+            pecaParaSelecionar.forEach((peca, index: number) => {
+                console.log(`${index + 1} - ${peca.nome}`);
+            });
+            console.log('0 - Concluir adição de peças');
+
+            const escolha = await perguntarComValidacao(
+                '> ',
+                (input) => {
+                    const num = parseInt(input);
+                    return !isNaN(num) && num >= 0 && num <= pecaParaSelecionar.length;
+                },
+                'Opção inválida.'
+            );
+
+            if (escolha === '0') {
+                adicionando = false;
+            } else {
+                const index = parseInt(escolha) - 1;
+                const pecaEscolhido = pecaParaSelecionar[index];
+                
+                novaAeronave.adicionarPeca(pecaEscolhido);
+                console.log(`${pecaEscolhido.nome} adicionado(a) à peça.`);
+            }
+        }
+
+        adicionando = true;
+        while (adicionando) {
+
+            const etapaParaSelecionar = etapaDisponiveis.filter(
+                disponivel => !novaAeronave.etapa.some(atribuido => atribuido.nome === disponivel.nome)
+            )
+            if (etapaDisponiveis.length === 0) {
+                console.log('Nenhuma etapa disponível para adicionar.');
+                break;
+            }
+
+            console.log('\nSelecione uma etapa para adicionar à etapa:');
+            etapaParaSelecionar.forEach((etapa, index: number) => {
+                console.log(`${index + 1} - ${etapa.nome}`);
+            });
+            console.log('0 - Concluir adição de etapas');
+
+            const escolha = await perguntarComValidacao(
+                '> ',
+                (input) => {
+                    const num = parseInt(input);
+                    return !isNaN(num) && num >= 0 && num <= etapaParaSelecionar.length;
+                },
+                'Opção inválida.'
+            );
+
+            if (escolha === '0') {
+                adicionando = false;
+            } else {
+                const index = parseInt(escolha) - 1;
+                const etapaEscolhido = etapaParaSelecionar[index];
+                
+                novaAeronave.adicionarEtapa(etapaEscolhido);
+                console.log(`${etapaEscolhido.nome} adicionado(a) à etapa.`);
+            }
+        }
+
         console.clear();
         console.log('\nAeronave cadastrada com sucesso!\n');
         novaAeronave.detalhes();

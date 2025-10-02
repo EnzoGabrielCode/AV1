@@ -65,7 +65,8 @@ export default class CadastrarEtapa {
                 console.log(`${funcionarioEscolhido.nome} adicionado(a) à etapa.`);
             }
         }
-
+        
+        console.clear();
         console.log('Etapa de Produção cadastrada com sucesso!\n');
         novaEtapa.detalhes(); 
         return novaEtapa;

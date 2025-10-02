@@ -51,7 +51,7 @@ class Sistema{
                         case '1':
                             console.clear();
                             const cadastroAeronave = new CadastrarAeronave();
-                            const novaAeronave = await cadastroAeronave.cadastrar(aeronavesCadastradas);
+                            const novaAeronave = await cadastroAeronave.cadastrar(aeronavesCadastradas, pecasCadastradas, etapasCadastradas);
                             aeronavesCadastradas.push(novaAeronave);
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
