@@ -2,16 +2,44 @@ import Aeronave from "./aeronave";
 import Teste from "./teste";
 
 export default class Relatorio{
-    gerarRelatorio(aeronave: Aeronave, teste: Teste[]):void{
-        console.log(`\n======================== Relatório ========================\n`)
-        //             -----------------------------------------------------------
-        aeronave.detalhes()
-        if(teste.length > 0){
-            console.log(`\n========== Testes realizados na aeronave ${aeronave.pegarCodigo} ==========\n`)
-            teste.forEach(teste => teste.detalhes())
+     public compilarTextoRelatorio(aeronave: Aeronave, cliente: string, teste: Teste[]): string {
+        let texto = `===========================================================\n`;
+        texto += ` RELATÓRIO FINAL DA AERONAVE: ${aeronave.pegarCodigo}\n`;
+        texto += `===========================================================\n\n`;
+        texto += `Cliente: ${cliente}\n`;
+        texto += `Data de Entrega: ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+
+        texto += `------------------- Detalhes da Aeronave -------------------\n`;
+        texto += `Modelo: ${aeronave.modelo}\n`;
+        texto += `Tipo: ${aeronave.tipo}\n`;
+        texto += `Capacidade: ${aeronave.capcidade} passageiros\n`;
+        texto += `Alcance: ${aeronave.alcance} km\n\n`;
+
+        texto += `-------------------- Peças Utilizadas --------------------\n`;
+        texto += `${aeronave.listarPeca()}\n`;
+
+        texto += `-------------- Etapas de Produção Realizadas --------------\n`;
+        texto += `${aeronave.listarEtapa()}\n`;
+        
+        texto += `--------------------- Testes Realizados --------------------\n`;
+
+        if (teste.length === 0) {
+            texto += 'Nenhum teste associado a esta aeronave.\n\n';
+        } else {
+            const listaDeTestesComoTexto = teste.map(testeUnitario => {
+                return `Tipo: ${testeUnitario.tipo}\nResultado: ${testeUnitario.resultado}}\n-----------------------------------------------------------`;
+            }).join('\n\n');
+
+            texto += listaDeTestesComoTexto + '\n\n';
         }
-        console.log(`\n===========================================================`)
+
+        texto += `==================== FIM DO RELATÓRIO ====================\n`;
+
+        return texto;
     }
 
-    salvarEmArquivo():void{}
+    public gerarRelatorioConsole(aeronave: Aeronave, cliente: string, teste: Teste[]): void {
+        const textoDoRelatorio = this.compilarTextoRelatorio(aeronave, cliente, teste);
+        console.log(textoDoRelatorio);
+    }
 }

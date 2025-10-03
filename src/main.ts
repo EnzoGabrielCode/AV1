@@ -14,6 +14,7 @@ import Funcionario from './funcionario';
 import Teste from './teste';
 import CadastrarTeste from './cadastrarTeste';
 import Relatorio from './relatorio';
+import { salvarArquivoAsync } from './salvarArquivo';
 
 const pecasCadastradas: Peca[] = [];
 const aeronavesCadastradas: Aeronave[] = [];
@@ -350,8 +351,15 @@ class Sistema{
                             if (escolha !== '0') {
                                 const index = parseInt(escolha) - 1;
                                 const aeronaveSelecionada = aeronavesCadastradas[index];
+                                const nomeCliente = await perguntar('Digite o nome do cliente para o relatório: ');
                                 const gerarRelatorio = new Relatorio();
-                                await gerarRelatorio.gerarRelatorio(aeronaveSelecionada, TestesCadastrados);
+                                const textoDoRelatorio = gerarRelatorio.compilarTextoRelatorio(aeronaveSelecionada, nomeCliente, TestesCadastrados);
+                                console.clear()
+                                console.log(textoDoRelatorio)
+
+                                const nomeArquivo = `relatorio_${aeronaveSelecionada.pegarCodigo}_${Date.now()}.txt`;
+
+                                await salvarArquivoAsync(nomeArquivo, textoDoRelatorio)
                             }
                         }
                         console.log('\nPressione Enter para continuar...');
