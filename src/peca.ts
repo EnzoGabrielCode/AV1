@@ -22,8 +22,4 @@ export default class Peca {
         console.log(`Nome: ${this.nome}\nTipo: ${this.tipo}\nFornecedor: ${this.fornecedor}\nStatus: ${this.status}`)
         console.log('-------------------------------------------------')
     }
-
-    salvar() {}
-
-    carregar() {}
 }

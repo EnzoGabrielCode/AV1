@@ -37,8 +37,4 @@ export default class Funcionario{
         console.log(`Nível de Permissão: ${this.nivelPermissao}`);
         console.log('-----------------------------------------------------')
     }
-
-    salvar(){}
-
-    carregar(){}
 }

@@ -84,8 +84,4 @@ Funcionários da Etapa:\n${etapa.listarFuncionarios()}`
             this.etapa.push(etapa)
         }
     }
-
-    salvar(){}
-
-    carregar(){}
 }
