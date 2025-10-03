@@ -24,11 +24,9 @@ async function carregar(nomeArquivo: string): Promise<any[]> {
         const dados = await fs.readFile(caminho, 'utf-8');
         return JSON.parse(dados);
     } catch (error) {
-    // Verificamos se 'error' é um objeto e se ele possui a propriedade 'code'
     if (typeof error === 'object' && error !== null && 'code' in error && (error as {code: string}).code === 'ENOENT') {
-        return []; // O arquivo não existe, o que é normal na primeira execução
+        return [];
     }
-    // Se for outro tipo de erro, mostramos no console
     console.error(`Erro ao carregar o arquivo ${nomeArquivo}:`, error);
     return [];
 }
