@@ -43,7 +43,6 @@ class Sistema{
                     console.log('2 - Cadastrar Peça');
                     console.log('3 - Cadastrar Etapa de Produção');
                     console.log('4 - Cadastrar Funcionário');
-                    console.log('5 - Cadastrar/Realizar Teste');
                     console.log('0 - Voltar\n');
                     const tipoCadastro = await perguntar('Digite a opção desejada: ');
 
@@ -77,15 +76,6 @@ class Sistema{
                             const cadastroFuncionario = new CadastrarFuncionario();
                             const novoFuncionario = await cadastroFuncionario.cadastrar(proximoIdFuncionario);
                             funcionariosCadastrados.push(novoFuncionario);
-                            proximoIdFuncionario++;
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '5':
-                            console.clear();
-                            const cadastrarTeste = new CadastrarTeste();
-                            const novoTeste = await cadastrarTeste.cadastrar();
-                            TestesCadastrados.push(novoTeste)
                             proximoIdFuncionario++;
                             console.log('\nPressione Enter para continuar...');
                             await perguntar('');
@@ -253,6 +243,18 @@ class Sistema{
                     console.log('\nPressione Enter para continuar...');
                     await perguntar('');
                     break;
+                
+                case '5':
+                            console.clear();
+                            const cadastrarTeste = new CadastrarTeste();
+                            const novoTeste = await cadastrarTeste.cadastrar(aeronavesCadastradas);
+                            if (novoTeste !== null) {
+                                TestesCadastrados.push(novoTeste);
+                            }
+                            console.log('\nPressione Enter para continuar...');
+                            await perguntar('');
+                            break;
+                
                 case '0':
                     console.clear();
                     console.log('\nEncerrando o sistema. Até mais!\n');
