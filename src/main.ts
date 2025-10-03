@@ -87,7 +87,7 @@ class Sistema{
 
             switch (resposta) {
                 case '1':
-                    if (usuarioLogado.nivelPermissao === 'ADMINISTRADOR') {
+                    if (usuarioLogado.nivelPermissao === 'ADMINISTRADOR' || usuarioLogado.nivelPermissao === 'ENGENHEIRO') {
                         console.clear();
                         console.log('\nEscolha o tipo de cadastro:');
                         console.log('1 - Cadastrar Aeronave');
@@ -106,16 +106,16 @@ class Sistema{
                                 console.log('\nPressione Enter para continuar...');
                                 await perguntar('');
                                 break;
-                                case '2':
-                                    console.clear();
+                            case '2':
+                                console.clear();
                                 const cadastroPeca = new CadastrarPeca();
                                 const novaPeca = await cadastroPeca.cadastrar();
                                 pecasCadastradas.push(novaPeca);
                                 console.log('\nPressione Enter para continuar...');
                                 await perguntar('');
                                 break;
-                                case '3':
-                                    console.clear();
+                            case '3':
+                                console.clear();
                                 const cadastroEtapa = new CadastrarEtapa();
                                 const novaEtapa = await cadastroEtapa.cadastrar(funcionariosCadastrados);
                                 etapasCadastradas.push(novaEtapa);
@@ -123,6 +123,7 @@ class Sistema{
                                 await perguntar('');
                                 break;
                             case '4':
+                                if (usuarioLogado.nivelPermissao === 'ADMINISTRADOR'){
                                 console.clear();
                                 const cadastroFuncionario = new CadastrarFuncionario();
                                 const novoFuncionario = await cadastroFuncionario.cadastrar(proximoIdFuncionario);
@@ -131,17 +132,23 @@ class Sistema{
                                 console.log('\nPressione Enter para continuar...');
                                 await perguntar('');
                                 break;
+                                } else {
+                                    console.log('\nACESSO NEGADO: Você não tem permissão para acessar a área de cadastros de funcionários.');
+                                    console.log('Pressione Enter para continuar...');
+                                    await perguntar('');
+                                    break
+                                }
                                 case '0':
                                     console.clear();
                                     console.log('\nVoltando, Pressione Enter para continuar...');
                                     await perguntar('');
                                     break;
                                     default:
-                                        console.clear();
-                                        console.log('\nOpção inválida. Retornando ao menu principal.\n');
-                                        console.log('\nPressione Enter para continuar...');
-                                        await perguntar('');
-                                        break;
+                                    console.clear();
+                                    console.log('\nOpção inválida. Retornando ao menu principal.\n');
+                                    console.log('\nPressione Enter para continuar...');
+                                    await perguntar('');
+                                    break;
                                     }
                                 break;
                                 } else {
@@ -295,53 +302,67 @@ class Sistema{
                     break;
 
                 case '4':
-                    console.clear();
-                    await atualizarEtapa(etapasCadastradas);
-                    console.log('\nPressione Enter para continuar...');
-                    await perguntar('');
-                    break;
+                        console.clear();
+                        await atualizarEtapa(etapasCadastradas);
+                        console.log('\nPressione Enter para continuar...');
+                        await perguntar('');
+                        break;
                 
                 case '5':
-                    console.clear();
-                    const cadastrarTeste = new CadastrarTeste();
-                    const novoTeste = await cadastrarTeste.cadastrar(aeronavesCadastradas);
-                    if (novoTeste !== null) {
-                        TestesCadastrados.push(novoTeste);
+                    if (usuarioLogado.nivelPermissao === 'ADMINISTRADOR' || usuarioLogado.nivelPermissao === 'ENGENHEIRO' ) {
+                        console.clear();
+                        const cadastrarTeste = new CadastrarTeste();
+                        const novoTeste = await cadastrarTeste.cadastrar(aeronavesCadastradas);
+                        if (novoTeste !== null) {
+                            TestesCadastrados.push(novoTeste);
+                        }
+                        console.log('\nPressione Enter para continuar...');
+                        await perguntar('');
+                        break;
+                    } else {
+                        console.log('\nACESSO NEGADO: Você não tem permissão para acessar a área de realização de testes.');
+                        console.log('Pressione Enter para continuar...');
+                        await perguntar('');
+                        break
                     }
-                    console.log('\nPressione Enter para continuar...');
-                    await perguntar('');
-                    break;
                 
                 case '6':
-                    console.clear();
-                    if (aeronavesCadastradas.length === 0) {
-                        console.log('\nNenhuma aeronave cadastrada para gerar relatório.');
-                    } else {
-                        console.log('\nSelecione a aeronave para gerar o relatório:');
-                        aeronavesCadastradas.forEach((aeronave, index) => {
-                            console.log(`${index + 1} - ${aeronave.pegarCodigo}`);
-                        });
-                        console.log('0 - Voltar');
+                    if (usuarioLogado.nivelPermissao === 'ADMINISTRADOR' || usuarioLogado.nivelPermissao === 'ENGENHEIRO' ) {
+                        console.clear();
+                        if (aeronavesCadastradas.length === 0) {
+                            console.log('\nNenhuma aeronave cadastrada para gerar relatório.');
+                        } else {
+                            console.log('\nSelecione a aeronave para gerar o relatório:');
+                            aeronavesCadastradas.forEach((aeronave, index) => {
+                                console.log(`${index + 1} - ${aeronave.pegarCodigo}`);
+                            });
+                            console.log('0 - Voltar');
 
-                        const escolha = await perguntarComValidacao(
-                            '> ',
-                            (input) => {
-                                const num = parseInt(input);
-                                return !isNaN(num) && num >= 0 && num <= aeronavesCadastradas.length;
-                            },
-                            'Opção inválida.'
-                        );
+                            const escolha = await perguntarComValidacao(
+                                '> ',
+                                (input) => {
+                                    const num = parseInt(input);
+                                    return !isNaN(num) && num >= 0 && num <= aeronavesCadastradas.length;
+                                },
+                                'Opção inválida.'
+                            );
 
-                        if (escolha !== '0') {
-                            const index = parseInt(escolha) - 1;
-                            const aeronaveSelecionada = aeronavesCadastradas[index];
-                            const gerarRelatorio = new Relatorio();
-                            await gerarRelatorio.gerarRelatorio(aeronaveSelecionada);
+                            if (escolha !== '0') {
+                                const index = parseInt(escolha) - 1;
+                                const aeronaveSelecionada = aeronavesCadastradas[index];
+                                const gerarRelatorio = new Relatorio();
+                                await gerarRelatorio.gerarRelatorio(aeronaveSelecionada);
+                            }
                         }
+                        console.log('\nPressione Enter para continuar...');
+                        await perguntar('');
+                        break;
+                    } else {
+                        console.log('\nACESSO NEGADO: Você não tem permissão para acessar a área de gerar relatórios.');
+                        console.log('Pressione Enter para continuar...');
+                        await perguntar('');
+                        break
                     }
-                    console.log('\nPressione Enter para continuar...');
-                    await perguntar('');
-                    break;
                 
                 case '7':
                     console.clear()
