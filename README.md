@@ -41,7 +41,7 @@ Siga o passo a passo abaixo para rodar o sistema.
 Abra seu terminal ou Git Bash e clone o repositório para sua máquina local.
 
 ```sh
-git clone [https://github.com/EnzoGabrielCode/AV1.git](https://github.com/EnzoGabrielCode/AV1.git)
+git clone https://github.com/EnzoGabrielCode/AV1.git
 ````
 
 **Passo 02: Abrir os arquivos na IDE**
@@ -118,7 +118,7 @@ Abaixo está a tabela com as permissões de cada nível de usuário no sistema:
 
 ## 👤 Autor
 
-**[Enzo Gabriel de Paula]**
+**Enzo Gabriel de Paula**
 
   * GitHub: [@EnzoGabrielCode](https://www.google.com/search?q=https://github.com/EnzoGabrielCode)
   * LinkedIn: [Enzo Gabriel de Paula](https://www.google.com/search?q=https://www.linkedin.com/in/enzo-gabriel-de-paula-8795a8332)
