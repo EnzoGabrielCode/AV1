@@ -27,7 +27,7 @@ export default class Relatorio{
             texto += 'Nenhum teste associado a esta aeronave.\n\n';
         } else {
             const listaDeTestesComoTexto = teste.map(testeUnitario => {
-                return `Tipo: ${testeUnitario.tipo}\nResultado: ${testeUnitario.resultado}}\n-----------------------------------------------------------`;
+                return `Tipo: ${testeUnitario.tipo}\nResultado: ${testeUnitario.resultado}\n-----------------------------------------------------------`;
             }).join('\n\n');
 
             texto += listaDeTestesComoTexto + '\n\n';
