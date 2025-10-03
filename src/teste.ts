@@ -30,10 +30,4 @@ export default class Teste {
         console.log(`Resultado do teste: ${this.resultado}`);
         console.log(`-------------------------`);
     }
-
-
-
-    salvar(){}
-
-    carregar(){}
 }
