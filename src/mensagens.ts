@@ -7,6 +7,8 @@ export default class Mensagens {
         console.log(`3 - Atualizar Status da Peça`);
         console.log(`4 - Atualizar Etapa de Produção`);
         console.log('5 - Realizar Teste de aeronave');
+        console.log('6 - Gerar relatório');
+        console.log('7 - Mudar de usuário');
         console.log(`0 - Sair do sistema\n`);
     }
 

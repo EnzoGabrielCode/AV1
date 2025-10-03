@@ -13,6 +13,7 @@ import CadastrarFuncionario from './cadastrarFuncionario';
 import Funcionario from './funcionario';
 import Teste from './teste';
 import CadastrarTeste from './cadastrarTeste';
+import Relatorio from './relatorio';
 
 const pecasCadastradas: Peca[] = [];
 const aeronavesCadastradas: Aeronave[] = [];
@@ -26,154 +27,210 @@ let mensagem = new Mensagens();
 
 class Sistema{
     public async iniciar() {
-        console.clear();
         mensagem.boasVindas();
-        mensagem.comoUsar();
 
-        let loop = true;
-        while (loop) {
+        if (funcionariosCadastrados.length === 0){
+            console.log('Não existe funcionários cadastrados no sistema;')
+            console.log('Cadastre um novo usuário para começar!\n')
+            const cadastroFuncionario = new CadastrarFuncionario();
+            const novoFuncionario = await cadastroFuncionario.cadastrar(proximoIdFuncionario);
+            funcionariosCadastrados.push(novoFuncionario);
+            proximoIdFuncionario++;
+            console.log('\nPressione Enter para continuar...');
+            await perguntar('');
+        }
+
+        let executandoSistema= true
+        while (executandoSistema){
+        
+        let usuarioLogado: Funcionario | null = null;
+        while (!usuarioLogado) {
+            console.clear();
+            mensagem.boasVindas();
+            console.log('=============== Login ===============');
+            const usuarioInput = await perguntar('Usuário (ou digite "sair" para encerrar): ');
+            if (usuarioInput.toLowerCase() === 'sair') {
+                executandoSistema = false;
+                break; 
+            }
+
+            const senhaInput = await perguntar('Senha: ');
+            
+            const funcionarioEncontrado = funcionariosCadastrados.find(
+                f => f.usuario === usuarioInput
+            );
+            
+            if (funcionarioEncontrado && funcionarioEncontrado.autenticar(usuarioInput, senhaInput)) {
+                usuarioLogado = funcionarioEncontrado;
+                console.log(`\nLogin bem-sucedido! Bem-vindo(a), ${usuarioLogado.nome}!`);
+                console.log('Pressione Enter para continuar...');
+                await perguntar('');
+            } else {
+                console.log('\nUsuário ou senha incorretos. Tente novamente.');
+                console.log('Pressione Enter para continuar...');
+                await perguntar('');
+            }
+        }
+        
+        if (!usuarioLogado){
+            continue
+        }
+
+        let sessaoAtiva = true;
+        while (sessaoAtiva) {
+            console.clear();
+            mensagem.boasVindas();
+            console.log(`\nUsuário: ${usuarioLogado.nome} | Nível: ${usuarioLogado.nivelPermissao}\n`);
+            mensagem.comoUsar();
             mensagem.listarOpcoes();
             const resposta = await perguntar('Digite a opção desejada: ');
 
             switch (resposta) {
                 case '1':
-                    console.clear();
-                    console.log('\nEscolha o tipo de cadastro:');
-                    console.log('1 - Cadastrar Aeronave');
-                    console.log('2 - Cadastrar Peça');
-                    console.log('3 - Cadastrar Etapa de Produção');
-                    console.log('4 - Cadastrar Funcionário');
-                    console.log('0 - Voltar\n');
-                    const tipoCadastro = await perguntar('Digite a opção desejada: ');
-
-                    switch (tipoCadastro) {
-                        case '1':
-                            console.clear();
-                            const cadastroAeronave = new CadastrarAeronave();
-                            const novaAeronave = await cadastroAeronave.cadastrar(aeronavesCadastradas, pecasCadastradas, etapasCadastradas);
-                            aeronavesCadastradas.push(novaAeronave);
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '2':
-                            console.clear();
-                            const cadastroPeca = new CadastrarPeca();
-                            const novaPeca = await cadastroPeca.cadastrar();
-                            pecasCadastradas.push(novaPeca);
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '3':
-                            console.clear();
-                            const cadastroEtapa = new CadastrarEtapa();
-                            const novaEtapa = await cadastroEtapa.cadastrar(funcionariosCadastrados);
-                            etapasCadastradas.push(novaEtapa);
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '4':
-                            console.clear();
-                            const cadastroFuncionario = new CadastrarFuncionario();
-                            const novoFuncionario = await cadastroFuncionario.cadastrar(proximoIdFuncionario);
-                            funcionariosCadastrados.push(novoFuncionario);
-                            proximoIdFuncionario++;
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '0':
-                            console.clear();
-                            console.log('\nVoltando, Pressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        default:
-                            console.clear();
-                            console.log('\nOpção inválida. Retornando ao menu principal.\n');
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                    }
-                    break;
+                    if (usuarioLogado.nivelPermissao === 'ADMINISTRADOR') {
+                        console.clear();
+                        console.log('\nEscolha o tipo de cadastro:');
+                        console.log('1 - Cadastrar Aeronave');
+                        console.log('2 - Cadastrar Peça');
+                        console.log('3 - Cadastrar Etapa de Produção');
+                        console.log('4 - Cadastrar Funcionário');
+                        console.log('0 - Voltar\n');
+                        const tipoCadastro = await perguntar('Digite a opção desejada: ');
+                    
+                        switch (tipoCadastro) {
+                            case '1':
+                                console.clear();
+                                const cadastroAeronave = new CadastrarAeronave();
+                                const novaAeronave = await cadastroAeronave.cadastrar(aeronavesCadastradas, pecasCadastradas, etapasCadastradas);
+                                aeronavesCadastradas.push(novaAeronave);
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                                case '2':
+                                    console.clear();
+                                const cadastroPeca = new CadastrarPeca();
+                                const novaPeca = await cadastroPeca.cadastrar();
+                                pecasCadastradas.push(novaPeca);
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                                case '3':
+                                    console.clear();
+                                const cadastroEtapa = new CadastrarEtapa();
+                                const novaEtapa = await cadastroEtapa.cadastrar(funcionariosCadastrados);
+                                etapasCadastradas.push(novaEtapa);
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                            case '4':
+                                console.clear();
+                                const cadastroFuncionario = new CadastrarFuncionario();
+                                const novoFuncionario = await cadastroFuncionario.cadastrar(proximoIdFuncionario);
+                                funcionariosCadastrados.push(novoFuncionario);
+                                proximoIdFuncionario++;
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                                case '0':
+                                    console.clear();
+                                    console.log('\nVoltando, Pressione Enter para continuar...');
+                                    await perguntar('');
+                                    break;
+                                    default:
+                                        console.clear();
+                                        console.log('\nOpção inválida. Retornando ao menu principal.\n');
+                                        console.log('\nPressione Enter para continuar...');
+                                        await perguntar('');
+                                        break;
+                                    }
+                                break;
+                                } else {
+                                    console.log('\nACESSO NEGADO: Você não tem permissão para acessar a área de cadastros.');
+                                    console.log('Pressione Enter para continuar...');
+                                    await perguntar('');
+                                    break
+                                }
                 case '2':
-                    console.clear();
-                    console.log('\nEscolha o que deseja listar:');
-                    console.log('1 - Listar Aeronaves');
-                    console.log('2 - Listar Peças');
-                    console.log('3 - Listar Etapa de Produção');
-                    console.log('4 - Listar Funcionários');
-                    console.log('5 - Listar Testes');
-                    console.log('0 - Voltar\n');
-                    const tipoLista = await perguntar('\nDigite a opção desejada: ');
+                        console.clear();
+                        console.log('\nEscolha o que deseja listar:');
+                        console.log('1 - Listar Aeronaves');
+                        console.log('2 - Listar Peças');
+                        console.log('3 - Listar Etapa de Produção');
+                        console.log('4 - Listar Funcionários');
+                        console.log('5 - Listar Testes');
+                        console.log('0 - Voltar\n');
+                        const tipoLista = await perguntar('\nDigite a opção desejada: ');
 
-                    switch (tipoLista) {
-                        case '1':
-                            console.clear();
-                            console.log('\n================ Aeronaves cadastradas ================\n');
-                            if (aeronavesCadastradas.length === 0) {
-                                console.log('Nenhuma aeronave cadastrada.');
-                            } else {
-                                aeronavesCadastradas.forEach(aeronave => aeronave.detalhes());
-                            }
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '2':
-                            console.clear();
-                            console.log('\n================ Peças cadastradas ================\n');
-                            if (pecasCadastradas.length === 0) {
-                                console.log('Nenhuma peça cadastrada.');
-                            } else {
-                                pecasCadastradas.forEach(peca => peca.detalhes());
-                            }
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '3':
-                            console.clear();
-                            console.log('\n================ Etapas de Produção cadastradas ================\n');
-                            if (etapasCadastradas.length === 0) {
-                                console.log('Nenhuma etapa de produção cadastrada.');
-                            } else {
-                                etapasCadastradas.forEach(etapa => etapa.detalhes());
-                            }
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '4':
-                            console.clear();
-                            console.log('\n================ Funcionários cadastrados ================');
-                            console.log('-----------------------------------------------------')
-                            if (funcionariosCadastrados.length === 0) {
-                                console.log('Nenhum funcionário cadastrado.');
-                            } else {
-                                funcionariosCadastrados.forEach(funcionario => funcionario.detalhes());
-                            }
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '5':
-                            console.clear();
-                            console.log('\n================ Testes cadastrados ================');
-                            console.log('-----------------------------------------------------')
-                            if (TestesCadastrados.length === 0) {
-                                console.log('Nenhum teste cadastrado.');
-                            } else {
-                                TestesCadastrados.forEach(teste => teste.detalhes());
-                            }
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        case '0':
-                            console.clear();
-                            console.log('\nVoltando, Pressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                        default:
-                            console.clear();
-                            console.log('\nOpção inválida. Retornando ao menu principal.\n');
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
-                    }
+                        switch (tipoLista) {
+                            case '1':
+                                console.clear();
+                                console.log('\n================ Aeronaves cadastradas ================\n');
+                                if (aeronavesCadastradas.length === 0) {
+                                    console.log('Nenhuma aeronave cadastrada.');
+                                } else {
+                                    aeronavesCadastradas.forEach(aeronave => aeronave.detalhes());
+                                }
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                            case '2':
+                                console.clear();
+                                console.log('\n================ Peças cadastradas ================\n');
+                                if (pecasCadastradas.length === 0) {
+                                    console.log('Nenhuma peça cadastrada.');
+                                } else {
+                                    pecasCadastradas.forEach(peca => peca.detalhes());
+                                }
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                            case '3':
+                                console.clear();
+                                console.log('\n================ Etapas de Produção cadastradas ================\n');
+                                if (etapasCadastradas.length === 0) {
+                                    console.log('Nenhuma etapa de produção cadastrada.');
+                                } else {
+                                    etapasCadastradas.forEach(etapa => etapa.detalhes());
+                                }
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                            case '4':
+                                console.clear();
+                                console.log('\n================ Funcionários cadastrados ================');
+                                console.log('-----------------------------------------------------')
+                                if (funcionariosCadastrados.length === 0) {
+                                    console.log('Nenhum funcionário cadastrado.');
+                                } else {
+                                    funcionariosCadastrados.forEach(funcionario => funcionario.detalhes());
+                                }
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                            case '5':
+                                console.clear();
+                                console.log('\n================ Testes cadastrados ================');
+                                console.log('-----------------------------------------------------')
+                                if (TestesCadastrados.length === 0) {
+                                    console.log('Nenhum teste cadastrado.');
+                                } else {
+                                    TestesCadastrados.forEach(teste => teste.detalhes());
+                                }
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                            case '0':
+                                console.clear();
+                                console.log('\nVoltando, Pressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                            default:
+                                console.clear();
+                                console.log('\nOpção inválida. Retornando ao menu principal.\n');
+                                console.log('\nPressione Enter para continuar...');
+                                await perguntar('');
+                                break;
+                        }
                     break;
 
                 case '3':
@@ -245,20 +302,60 @@ class Sistema{
                     break;
                 
                 case '5':
-                            console.clear();
-                            const cadastrarTeste = new CadastrarTeste();
-                            const novoTeste = await cadastrarTeste.cadastrar(aeronavesCadastradas);
-                            if (novoTeste !== null) {
-                                TestesCadastrados.push(novoTeste);
-                            }
-                            console.log('\nPressione Enter para continuar...');
-                            await perguntar('');
-                            break;
+                    console.clear();
+                    const cadastrarTeste = new CadastrarTeste();
+                    const novoTeste = await cadastrarTeste.cadastrar(aeronavesCadastradas);
+                    if (novoTeste !== null) {
+                        TestesCadastrados.push(novoTeste);
+                    }
+                    console.log('\nPressione Enter para continuar...');
+                    await perguntar('');
+                    break;
                 
+                case '6':
+                    console.clear();
+                    if (aeronavesCadastradas.length === 0) {
+                        console.log('\nNenhuma aeronave cadastrada para gerar relatório.');
+                    } else {
+                        console.log('\nSelecione a aeronave para gerar o relatório:');
+                        aeronavesCadastradas.forEach((aeronave, index) => {
+                            console.log(`${index + 1} - ${aeronave.pegarCodigo}`);
+                        });
+                        console.log('0 - Voltar');
+
+                        const escolha = await perguntarComValidacao(
+                            '> ',
+                            (input) => {
+                                const num = parseInt(input);
+                                return !isNaN(num) && num >= 0 && num <= aeronavesCadastradas.length;
+                            },
+                            'Opção inválida.'
+                        );
+
+                        if (escolha !== '0') {
+                            const index = parseInt(escolha) - 1;
+                            const aeronaveSelecionada = aeronavesCadastradas[index];
+                            const gerarRelatorio = new Relatorio();
+                            await gerarRelatorio.gerarRelatorio(aeronaveSelecionada);
+                        }
+                    }
+                    console.log('\nPressione Enter para continuar...');
+                    await perguntar('');
+                    break;
+                
+                case '7':
+                    console.clear()
+                    console.log('\nTrocando de usuário')
+                    sessaoAtiva = false
+                    console.log('Pressione Enter para voltar à tela de login...');
+                    await perguntar('');
+                    break;
+
                 case '0':
                     console.clear();
                     console.log('\nEncerrando o sistema. Até mais!\n');
-                    loop = false;
+                    sessaoAtiva = false;
+                    executandoSistema = false
                     break;
                 default:
                     console.clear();
@@ -268,8 +365,9 @@ class Sistema{
                     break;
             }
         }
-        leitor.close();
     }
+        leitor.close();
+}
 }
 
 const sistema = new Sistema();

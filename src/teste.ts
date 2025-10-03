@@ -26,8 +26,8 @@ export default class Teste {
         } else {
             this.aeronaves.forEach(a => console.log(`Aeronave testada: \nCódigo: ${a.pegarCodigo}, Modelo: ${a.modelo}`));
         }
-        console.log(`Tipo: ${this.tipo}`);
-        console.log(`Resultado: ${this.resultado}`);
+        console.log(`Tipo do teste: ${this.tipo}`);
+        console.log(`Resultado do teste: ${this.resultado}`);
         console.log(`-------------------------`);
     }
 
