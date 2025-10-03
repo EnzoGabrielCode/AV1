@@ -33,7 +33,7 @@ Nome: ${peca.nome}
 Tipo: ${peca.tipo}
 Fornecedor: ${peca.fornecedor}
 Status: ${peca.status}
------------------------------------------------------------\n`
+`
         }
     return listaPeca
         }
@@ -46,7 +46,7 @@ Status: ${peca.status}
 Nome: ${etapa.nome}
 Prazo: ${etapa.prazo}
 Status: ${etapa.status}
------------------------------------------------------------\n
+
 Funcionários da Etapa:\n${etapa.listarFuncionarios()}`
         }
     return listaEtapa;

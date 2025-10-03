@@ -14,12 +14,14 @@ import Funcionario from './funcionario';
 import Teste from './teste';
 import CadastrarTeste from './cadastrarTeste';
 import Relatorio from './relatorio';
+import { salvarArquivoAsync } from './salvarArquivo';
+import { salvarDados, carregarDados } from './persistencia';
 
-const pecasCadastradas: Peca[] = [];
-const aeronavesCadastradas: Aeronave[] = [];
-const etapasCadastradas: Etapa[] = [];
-const funcionariosCadastrados: Funcionario[] = [];
-const TestesCadastrados: Teste[] = []
+let pecasCadastradas: Peca[] = [];
+let aeronavesCadastradas: Aeronave[] = [];
+let etapasCadastradas: Etapa[] = [];
+let funcionariosCadastrados: Funcionario[] = [];
+let TestesCadastrados: Teste[] = []
 
 let proximoIdFuncionario = 1
 
@@ -27,6 +29,17 @@ let mensagem = new Mensagens();
 
 class Sistema{
     public async iniciar() {
+        const dadosCarregados = await carregarDados();
+        aeronavesCadastradas = dadosCarregados.aeronaves;
+        pecasCadastradas = dadosCarregados.pecas;
+        etapasCadastradas = dadosCarregados.etapas;
+        funcionariosCadastrados = dadosCarregados.funcionarios;
+        TestesCadastrados = dadosCarregados.testes;
+
+        if (funcionariosCadastrados.length > 0) {
+            proximoIdFuncionario = Math.max(...funcionariosCadastrados.map(f => parseInt(f.id))) + 1;
+        }
+
         mensagem.boasVindas();
 
         if (funcionariosCadastrados.length === 0){
@@ -350,8 +363,15 @@ class Sistema{
                             if (escolha !== '0') {
                                 const index = parseInt(escolha) - 1;
                                 const aeronaveSelecionada = aeronavesCadastradas[index];
+                                const nomeCliente = await perguntar('Digite o nome do cliente para o relatório: ');
                                 const gerarRelatorio = new Relatorio();
-                                await gerarRelatorio.gerarRelatorio(aeronaveSelecionada, TestesCadastrados);
+                                const textoDoRelatorio = gerarRelatorio.compilarTextoRelatorio(aeronaveSelecionada, nomeCliente, TestesCadastrados);
+                                console.clear()
+                                console.log(textoDoRelatorio)
+
+                                const nomeArquivo = `relatorio_${aeronaveSelecionada.pegarCodigo}_${Date.now()}.txt`;
+
+                                await salvarArquivoAsync(nomeArquivo, textoDoRelatorio)
                             }
                         }
                         console.log('\nPressione Enter para continuar...');
@@ -377,6 +397,14 @@ class Sistema{
                     console.log('\nEncerrando o sistema. Até mais!\n');
                     sessaoAtiva = false;
                     executandoSistema = false
+
+                    await salvarDados(
+                        aeronavesCadastradas,
+                        pecasCadastradas,
+                        etapasCadastradas,
+                        funcionariosCadastrados,
+                        TestesCadastrados
+                    );
                     break;
                 default:
                     console.clear();
