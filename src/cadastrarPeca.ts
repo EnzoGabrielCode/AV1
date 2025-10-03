@@ -37,7 +37,7 @@ export default class CadastrarPeca {
 
         const fornecedor = await perguntarComValidacao(
             'Digite o fornecedor da peça: ',
-            validarNaoVazio,
+            validarSemNumero,
             'O fornecedor não pode ser vazio.'
         );
 

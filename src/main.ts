@@ -46,7 +46,7 @@ class Sistema{
             console.log('Não existe funcionários cadastrados no sistema;')
             console.log('Cadastre um novo usuário para começar!\n')
             const cadastroFuncionario = new CadastrarFuncionario();
-            const novoFuncionario = await cadastroFuncionario.cadastrar(proximoIdFuncionario);
+            const novoFuncionario = await cadastroFuncionario.cadastrarPrimeiroAdmin(proximoIdFuncionario);
             funcionariosCadastrados.push(novoFuncionario);
             proximoIdFuncionario++;
             console.log('\nPressione Enter para continuar...');
