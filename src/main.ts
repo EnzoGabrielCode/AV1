@@ -351,7 +351,7 @@ class Sistema{
                                 const index = parseInt(escolha) - 1;
                                 const aeronaveSelecionada = aeronavesCadastradas[index];
                                 const gerarRelatorio = new Relatorio();
-                                await gerarRelatorio.gerarRelatorio(aeronaveSelecionada);
+                                await gerarRelatorio.gerarRelatorio(aeronaveSelecionada, TestesCadastrados);
                             }
                         }
                         console.log('\nPressione Enter para continuar...');

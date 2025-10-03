@@ -1,6 +1,7 @@
 import { TipoAeronave } from "./enums"
 import Peca from "./peca"
 import Etapa from "./etapa"
+import Teste from "./teste"
 
 export default class Aeronave {
     private codigo: string
@@ -10,6 +11,7 @@ export default class Aeronave {
     public alcance: number
     public peca: Peca[]
     public etapa: Etapa[]
+    public teste: Teste[]
 
     constructor(codigo: string, modelo: string, tipo: TipoAeronave, capcidade: number, alcance: number) {
         this.codigo = codigo
@@ -19,9 +21,10 @@ export default class Aeronave {
         this.alcance = alcance
         this.peca = []
         this.etapa = []
+        this.teste = []
     }
 
-    listarPeca(){
+    listarPeca():string{
         let listaPeca = ''
 
         for (const peca of this.peca){
@@ -35,7 +38,7 @@ Status: ${peca.status}
     return listaPeca
         }
 
-    listarEtapa(){
+    listarEtapa():string{
         let listaEtapa = ''
 
         for (const etapa of this.etapa){
@@ -43,16 +46,27 @@ Status: ${peca.status}
 Nome: ${etapa.nome}
 Prazo: ${etapa.prazo}
 Status: ${etapa.status}
-Funcionários da Etapa:\n${etapa.listarFuncionarios()}\n
-`
+-----------------------------------------------------------\n
+Funcionários da Etapa:\n${etapa.listarFuncionarios()}`
         }
-    return listaEtapa
-        }
+    return listaEtapa;
+    }
 
     detalhes():void{
-        console.log(`---------Detalhes da Aeronave ${this.codigo}:---------`)
-        console.log(`Código: ${this.codigo}\nModelo: ${this.modelo}\nTipo: ${this.tipo}\nCapacidade: ${this.capcidade}\nAlcance: ${this.alcance}\n\nPeças associadas:\n${this.listarPeca()}\nEtapa associada:\n${this.listarEtapa()}\n`)
-        console.log('-----------------------------------------------------------')
+        console.log(`---------------- Detalhes da Aeronave ${this.codigo}: ----------------`)
+        console.log(`Código: ${this.codigo}`)
+        console.log(`Modelo: ${this.modelo}`)
+        console.log(`Tipo: ${this.tipo}`)
+        console.log(`Capacidade: ${this.capcidade}`)
+        console.log(`Alcance: ${this.alcance}`)
+        console.log('-----------------------------------------------------------\n')
+        if(this.peca.length > 0){
+            console.log(`Peças associadas:\n${this.listarPeca()}`)
+        }
+        if(this.etapa.length > 0){
+            console.log(`Etapa associada:\n${this.listarEtapa()}-----------------------------------------------------------`)
+        }
+        // console.log('-----------------------------------------------------------')
     }
 
     get pegarCodigo(): string {

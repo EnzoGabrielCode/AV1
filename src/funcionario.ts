@@ -28,6 +28,7 @@ export default class Funcionario{
     }
 
     detalhes(): void {
+        console.log('-----------------------------------------------------')
         console.log(`ID: ${this.id}`);
         console.log(`Nome: ${this.nome}`);
         console.log(`Telefone: ${this.telefone}`);
